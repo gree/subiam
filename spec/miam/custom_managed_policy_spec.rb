@@ -1,13 +1,13 @@
 describe 'custom managed policy' do
   let(:dsl) do
     <<-RUBY
-      managed_policy "my-policy", :path=>"/" do
+      managed_policy "iam-test-my-policy", :path=>"/" do
         {"Version"=>"2012-10-17",
          "Statement"=>
           [{"Effect"=>"Allow", "Action"=>"directconnect:Describe*", "Resource"=>"*"}]}
       end
 
-      user "mary", :path=>"/staff/" do
+      user "iam-test-mary", :path=>"/staff/" do
         policy "S3" do
           {"Statement"=>
             [{"Action"=>
@@ -18,7 +18,7 @@ describe 'custom managed policy' do
         end
 
         attached_managed_policies(
-          "arn:aws:iam::#{MIAM_TEST_ACCOUNT_ID}:policy/my-policy"
+          "arn:aws:iam::#{MIAM_TEST_ACCOUNT_ID}:policy/iam-test-my-policy"
         )
       end
     RUBY
@@ -26,11 +26,11 @@ describe 'custom managed policy' do
 
   let(:expected) do
     {:users=>
-      {"mary"=>
+      {"iam-test-mary"=>
         {:path=>"/staff/",
          :groups=>[],
          :attached_managed_policies=>[
-          "arn:aws:iam::#{MIAM_TEST_ACCOUNT_ID}:policy/my-policy"],
+          "arn:aws:iam::#{MIAM_TEST_ACCOUNT_ID}:policy/iam-test-my-policy"],
          :policies=>
           {"S3"=>
             {"Statement"=>
@@ -40,7 +40,7 @@ describe 'custom managed policy' do
      :groups=>{},
      :instance_profiles=>{},
      :policies=>
-      {"my-policy"=>
+      {"iam-test-my-policy"=>
         {:path=>"/",
          :document=>
           {"Version"=>"2012-10-17",
@@ -71,19 +71,19 @@ describe 'custom managed policy' do
     it do
       updated = apply(subject) {
         <<-RUBY
-          managed_policy "my-policy", :path=>"/" do
+          managed_policy "iam-test-my-policy", :path=>"/" do
             {"Version"=>"2012-10-17",
              "Statement"=>
               [{"Effect"=>"Allow", "Action"=>"directconnect:Describe*", "Resource"=>"*"}]}
           end
 
-          managed_policy "my-policy2", :path=>"/" do
+          managed_policy "iam-test-my-policy2", :path=>"/" do
             {"Version"=>"2012-10-17",
              "Statement"=>
               [{"Effect"=>"Deny", "Action"=>"directconnect:Describe*", "Resource"=>"*"}]}
           end
 
-          user "mary", :path=>"/staff/" do
+          user "iam-test-mary", :path=>"/staff/" do
             policy "S3" do
               {"Statement"=>
                 [{"Action"=>
@@ -94,19 +94,19 @@ describe 'custom managed policy' do
             end
 
             attached_managed_policies(
-              "arn:aws:iam::#{MIAM_TEST_ACCOUNT_ID}:policy/my-policy",
-              "arn:aws:iam::#{MIAM_TEST_ACCOUNT_ID}:policy/my-policy2"
+              "arn:aws:iam::#{MIAM_TEST_ACCOUNT_ID}:policy/iam-test-my-policy",
+              "arn:aws:iam::#{MIAM_TEST_ACCOUNT_ID}:policy/iam-test-my-policy2"
             )
           end
         RUBY
       }
 
       expect(updated).to be_truthy
-      expected[:policies]["my-policy2"] = {:path=>"/", :document=>{"Version"=>"2012-10-17", "Statement"=>[{"Effect"=>"Deny", "Action"=>"directconnect:Describe*", "Resource"=>"*"}]}}
-      expected[:users]["mary"][:attached_managed_policies] << "arn:aws:iam::#{MIAM_TEST_ACCOUNT_ID}:policy/my-policy2"
-      expected[:users]["mary"][:attached_managed_policies].sort!
+      expected[:policies]["iam-test-my-policy2"] = {:path=>"/", :document=>{"Version"=>"2012-10-17", "Statement"=>[{"Effect"=>"Deny", "Action"=>"directconnect:Describe*", "Resource"=>"*"}]}}
+      expected[:users]["iam-test-mary"][:attached_managed_policies] << "arn:aws:iam::#{MIAM_TEST_ACCOUNT_ID}:policy/iam-test-my-policy2"
+      expected[:users]["iam-test-mary"][:attached_managed_policies].sort!
       actual = export
-      actual[:users]["mary"][:attached_managed_policies].sort!
+      actual[:users]["iam-test-mary"][:attached_managed_policies].sort!
       expect(actual).to eq expected
     end
   end
@@ -117,13 +117,13 @@ describe 'custom managed policy' do
     it do
       updated = apply(subject) {
         <<-RUBY
-          managed_policy "my-policy2", :path=>"/" do
+          managed_policy "iam-test-my-policy2", :path=>"/" do
             {"Version"=>"2012-10-17",
              "Statement"=>
               [{"Effect"=>"Deny", "Action"=>"directconnect:Describe*", "Resource"=>"*"}]}
           end
 
-          user "mary", :path=>"/staff/" do
+          user "iam-test-mary", :path=>"/staff/" do
             policy "S3" do
               {"Statement"=>
                 [{"Action"=>
@@ -134,15 +134,15 @@ describe 'custom managed policy' do
             end
 
             attached_managed_policies(
-              "arn:aws:iam::#{MIAM_TEST_ACCOUNT_ID}:policy/my-policy2"
+              "arn:aws:iam::#{MIAM_TEST_ACCOUNT_ID}:policy/iam-test-my-policy2"
             )
           end
         RUBY
       }
 
       expect(updated).to be_truthy
-      expected[:policies] = {"my-policy2" => {:path=>"/", :document=>{"Version"=>"2012-10-17", "Statement"=>[{"Effect"=>"Deny", "Action"=>"directconnect:Describe*", "Resource"=>"*"}]}}}
-      expected[:users]["mary"][:attached_managed_policies] = ["arn:aws:iam::#{MIAM_TEST_ACCOUNT_ID}:policy/my-policy2"]
+      expected[:policies] = {"iam-test-my-policy2" => {:path=>"/", :document=>{"Version"=>"2012-10-17", "Statement"=>[{"Effect"=>"Deny", "Action"=>"directconnect:Describe*", "Resource"=>"*"}]}}}
+      expected[:users]["iam-test-mary"][:attached_managed_policies] = ["arn:aws:iam::#{MIAM_TEST_ACCOUNT_ID}:policy/iam-test-my-policy2"]
       expect(export).to eq expected
     end
   end
@@ -153,13 +153,13 @@ describe 'custom managed policy' do
     it do
       updated = apply(subject) {
         <<-RUBY
-          managed_policy "my-policy", :path=>"/" do
+          managed_policy "iam-test-my-policy", :path=>"/" do
             {"Version"=>"2012-10-17",
              "Statement"=>
               [{"Effect"=>"Deny", "Action"=>"directconnect:*", "Resource"=>"*"}]}
           end
 
-          user "mary", :path=>"/staff/" do
+          user "iam-test-mary", :path=>"/staff/" do
             policy "S3" do
               {"Statement"=>
                 [{"Action"=>
@@ -170,14 +170,14 @@ describe 'custom managed policy' do
             end
 
             attached_managed_policies(
-              "arn:aws:iam::#{MIAM_TEST_ACCOUNT_ID}:policy/my-policy"
+              "arn:aws:iam::#{MIAM_TEST_ACCOUNT_ID}:policy/iam-test-my-policy"
             )
           end
         RUBY
       }
 
       expect(updated).to be_truthy
-      expected[:policies]["my-policy"] = {:path=>"/", :document=>{"Version"=>"2012-10-17", "Statement"=>[{"Effect"=>"Deny", "Action"=>"directconnect:*", "Resource"=>"*"}]}}
+      expected[:policies]["iam-test-my-policy"] = {:path=>"/", :document=>{"Version"=>"2012-10-17", "Statement"=>[{"Effect"=>"Deny", "Action"=>"directconnect:*", "Resource"=>"*"}]}}
       expect(export).to eq expected
     end
   end
@@ -191,13 +191,13 @@ describe 'custom managed policy' do
 
         apply(subject) {
           <<-RUBY
-            managed_policy "my-policy", :path=>"/" do
+            managed_policy "iam-test-my-policy", :path=>"/" do
               {"Version"=>"2012-10-17",
                "Statement"=>
                 [{"Effect"=>"Deny", "Action"=>"directconnect:*", "Resource"=>"*"}]}
             end
 
-            user "mary", :path=>"/staff/" do
+            user "iam-test-mary", :path=>"/staff/" do
               policy "S3" do
                 {"Statement"=>
                   [{"Action"=>
@@ -208,14 +208,14 @@ describe 'custom managed policy' do
               end
 
               attached_managed_policies(
-                "arn:aws:iam::#{MIAM_TEST_ACCOUNT_ID}:policy/my-policy"
+                "arn:aws:iam::#{MIAM_TEST_ACCOUNT_ID}:policy/iam-test-my-policy"
               )
             end
           RUBY
         }
       end
 
-      expected[:policies]["my-policy"] = {:path=>"/", :document=>{"Version"=>"2012-10-17", "Statement"=>[{"Effect"=>"Deny", "Action"=>"directconnect:*", "Resource"=>"*"}]}}
+      expected[:policies]["iam-test-my-policy"] = {:path=>"/", :document=>{"Version"=>"2012-10-17", "Statement"=>[{"Effect"=>"Deny", "Action"=>"directconnect:*", "Resource"=>"*"}]}}
       expect(export).to eq expected
     end
   end

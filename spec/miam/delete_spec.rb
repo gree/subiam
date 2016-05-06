@@ -1,4 +1,5 @@
-describe 'delete' do
+# subiam which forked from miam doesn't use delete
+xdescribe 'delete' do
   let(:dsl) do
     <<-RUBY
       user "bob", :path=>"/devloper/" do

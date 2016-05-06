@@ -1,12 +1,8 @@
-# Miam
+# Subiam
 
-Miam is a tool to manage IAM.
+Subiam is a tool to manage IAM.
 
 It defines the state of IAM using DSL, and updates IAM according to DSL.
-
-[![Gem Version](https://badge.fury.io/rb/miam.svg)](http://badge.fury.io/rb/miam)
-[![Build Status](https://travis-ci.org/winebarrel/miam.svg?branch=master)](https://travis-ci.org/winebarrel/miam)
-[![Coverage Status](https://coveralls.io/repos/winebarrel/miam/badge.svg?branch=master&service=github)](https://coveralls.io/github/winebarrel/miam?branch=master)
 
 **Notice**
 
@@ -28,7 +24,7 @@ It defines the state of IAM using DSL, and updates IAM according to DSL.
 Add this line to your application's Gemfile:
 
 ```ruby
-gem 'miam'
+gem 'subiam'
 ```
 
 And then execute:
@@ -37,7 +33,7 @@ And then execute:
 
 Or install it yourself as:
 
-    $ gem install miam
+    $ gem install subiam
 
 ## Usage
 
@@ -45,16 +41,16 @@ Or install it yourself as:
 export AWS_ACCESS_KEY_ID='...'
 export AWS_SECRET_ACCESS_KEY='...'
 export AWS_REGION='us-east-1'
-miam -e -o IAMfile  # export IAM
+subiam -e -o IAMfile  # export IAM
 vi IAMfile
-miam -a --dry-run
-miam -a             # apply `IAMfile`
+subiam -a --dry-run
+subiam -a             # apply `IAMfile`
 ```
 
 ## Help
 
 ```
-Usage: miam [options]
+Usage: subiam [options]
     -p, --profile PROFILE_NAME
         --credentials-path PATH
     -k, --access-key ACCESS_KEY
@@ -229,7 +225,7 @@ end
 ## Use JSON
 
 ```sh
-$ miam -e -o iam.json
+$ subiam -e -o iam.json
    ᗧ 100%
 Export IAM to `iam.json`
 
@@ -244,7 +240,7 @@ $ cat iam.json
       "policies": {
       ...
 
-$ miam -a -f iam.json --dry-run
+$ subiam -a -f iam.json --dry-run
 Apply `iam.json` to IAM (dry-run)
    ᗧ 100%
 No change

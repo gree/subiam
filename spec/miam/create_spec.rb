@@ -12,12 +12,12 @@ describe 'create' do
   context 'when create user and group' do
     let(:dsl) do
       <<-RUBY
-        user "bob", :path=>"/devloper/" do
+        user "iam-test-bob", :path=>"/devloper/" do
           login_profile :password_reset_required=>true
 
           groups(
-            "Admin",
-            "SES"
+            "iam-test-Admin",
+            "iam-test-SES"
           )
 
           policy "S3" do
@@ -30,7 +30,7 @@ describe 'create' do
           end
         end
 
-        user "mary", :path=>"/staff/" do
+        user "iam-test-mary", :path=>"/staff/" do
           policy "S3" do
             {"Statement"=>
               [{"Action"=>
@@ -41,22 +41,22 @@ describe 'create' do
           end
         end
 
-        group "Admin", :path=>"/admin/" do
+        group "iam-test-Admin", :path=>"/admin/" do
           policy "Admin" do
             {"Statement"=>[{"Effect"=>"Allow", "Action"=>"*", "Resource"=>"*"}]}
           end
         end
 
-        group "SES", :path=>"/ses/" do
+        group "iam-test-SES", :path=>"/ses/" do
           policy "ses-policy" do
             {"Statement"=>
               [{"Effect"=>"Allow", "Action"=>"ses:SendRawEmail", "Resource"=>"*"}]}
           end
         end
 
-        role "my-role", :path=>"/any/" do
+        role "iam-test-my-role", :path=>"/any/" do
           instance_profiles(
-            "my-instance-profile"
+            "iam-test-my-instance-profile"
           )
 
           assume_role_policy_document do
@@ -78,7 +78,7 @@ describe 'create' do
           end
         end
 
-        instance_profile "my-instance-profile", :path=>"/profile/"
+        instance_profile "iam-test-my-instance-profile", :path=>"/profile/"
       RUBY
     end
 
@@ -87,9 +87,9 @@ describe 'create' do
 
       let(:expected) do
         {:users=>
-          {"bob"=>
+          {"iam-test-bob"=>
             {:path=>"/devloper/",
-             :groups=>["Admin", "SES"],
+             :groups=>["iam-test-Admin", "iam-test-SES"],
              :attached_managed_policies=>[],
              :policies=>
               {"S3"=>
@@ -98,7 +98,7 @@ describe 'create' do
                     "Effect"=>"Allow",
                     "Resource"=>"*"}]}},
              :login_profile=>{:password_reset_required=>true}},
-           "mary"=>
+           "iam-test-mary"=>
             {:path=>"/staff/",
              :groups=>[],
              :attached_managed_policies=>[],
@@ -109,13 +109,13 @@ describe 'create' do
                     "Effect"=>"Allow",
                     "Resource"=>"*"}]}}}},
          :groups=>
-          {"Admin"=>
+          {"iam-test-Admin"=>
             {:path=>"/admin/",
              :attached_managed_policies=>[],
              :policies=>
               {"Admin"=>
                 {"Statement"=>[{"Effect"=>"Allow", "Action"=>"*", "Resource"=>"*"}]}}},
-           "SES"=>
+           "iam-test-SES"=>
             {:path=>"/ses/",
              :attached_managed_policies=>[],
              :policies=>
@@ -126,7 +126,7 @@ describe 'create' do
                     "Resource"=>"*"}]}}}},
          :policies => {},
          :roles=>
-          {"my-role"=>
+          {"iam-test-my-role"=>
             {:path=>"/any/",
              :assume_role_policy_document=>
               {"Version"=>"2012-10-17",
@@ -135,7 +135,7 @@ describe 'create' do
                   "Effect"=>"Allow",
                   "Principal"=>{"Service"=>"ec2.amazonaws.com"},
                   "Action"=>"sts:AssumeRole"}]},
-             :instance_profiles=>["my-instance-profile"],
+             :instance_profiles=>["iam-test-my-instance-profile"],
              :attached_managed_policies=>[],
              :policies=>
               {"role-policy"=>
@@ -143,7 +143,7 @@ describe 'create' do
                   [{"Action"=>["s3:Get*", "s3:List*"],
                     "Effect"=>"Allow",
                     "Resource"=>"*"}]}}}},
-         :instance_profiles=>{"my-instance-profile"=>{:path=>"/profile/"}}}
+         :instance_profiles=>{"iam-test-my-instance-profile"=>{:path=>"/profile/"}}}
       end
 
       it do
@@ -155,12 +155,12 @@ describe 'create' do
       context 'when using template' do
         let(:dsl) do
           <<-RUBY
-            template "bob" do
+            template "iam-test-bob" do
               login_profile :password_reset_required=>true
 
               groups(
-                "Admin",
-                "SES"
+                "iam-test-Admin",
+                "iam-test-SES"
               )
 
               policy "S3" do
@@ -173,7 +173,7 @@ describe 'create' do
               end
             end
 
-            template "mary" do
+            template "iam-test-mary" do
               policy "S3" do
                 {"Statement"=>
                   [{"Action"=>
@@ -184,39 +184,39 @@ describe 'create' do
               end
             end
 
-            user "bob", :path=>"/devloper/" do
+            user "iam-test-bob", :path=>"/devloper/" do
               include_template context.user_name
             end
 
-            user "mary", :path=>"/staff/" do
+            user "iam-test-mary", :path=>"/staff/" do
               include_template context.user_name
             end
 
-            template "Admin" do
+            template "iam-test-Admin" do
               policy context.policy_name do
                 {"Statement"=>[{"Effect"=>"Allow", "Action"=>"*", "Resource"=>"*"}]}
               end
             end
 
-            template "SES" do
+            template "iam-test-SES" do
               policy context.policy_name do
                 {"Statement"=>
                   [{"Effect"=>"Allow", "Action"=>"ses:SendRawEmail", "Resource"=>"*"}]}
               end
             end
 
-            group "Admin", :path=>"/admin/" do
+            group "iam-test-Admin", :path=>"/admin/" do
               include_template context.group_name, policy_name: "Admin"
             end
 
-            group "SES", :path=>"/ses/" do
+            group "iam-test-SES", :path=>"/ses/" do
               context.policy_name = "ses-policy"
               include_template context.group_name
             end
 
-            template "my-role" do
+            template "iam-test-my-role" do
               instance_profiles(
-                "my-instance-profile"
+                "iam-test-my-instance-profile"
               )
 
               assume_role_policy_document do
@@ -238,11 +238,11 @@ describe 'create' do
               end
             end
 
-            role "my-role", :path=>"/any/" do
+            role "iam-test-my-role", :path=>"/any/" do
               include_template context.role_name
             end
 
-            instance_profile "my-instance-profile", :path=>"/profile/"
+            instance_profile "iam-test-my-instance-profile", :path=>"/profile/"
           RUBY
         end
 

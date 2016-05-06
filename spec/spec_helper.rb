@@ -20,18 +20,22 @@ MIAM_TEST_ACCOUNT_ID = Aws::IAM::Client.new.get_user.user.user_id
 
 RSpec.configure do |config|
   config.before(:each) do
-    apply { '' }
+    c = client(target: nil)
+    apply(c) { '' }
   end
 
   config.after(:all) do
-    apply { '' }
+    c = client(target: nil)
+    apply(c) { '' }
   end
 end
 
 def client(user_options = {})
   options = {
     logger: Logger.new('/dev/null'),
-    no_progress: true
+    no_progress: true,
+    target: /iam-test-/,
+    enable_delete: true,
   }
 
   options[:password_manager] = Miam::PasswordManager.new('/dev/null', options)
@@ -46,7 +50,7 @@ def client(user_options = {})
       aws_config: {
         http_wire_trace: true,
         logger: logger
-      }
+      },
     )
   end
 

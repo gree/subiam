@@ -1,12 +1,12 @@
 describe 'update' do
   let(:dsl) do
     <<-RUBY
-      user "bob", :path=>"/devloper/" do
+      user "iam-test-bob", :path=>"/devloper/" do
         login_profile :password_reset_required=>true
 
         groups(
-          "Admin",
-          "SES"
+          "iam-test-Admin",
+          "iam-test-SES"
         )
 
         policy "S3" do
@@ -19,7 +19,7 @@ describe 'update' do
         end
       end
 
-      user "mary", :path=>"/staff/" do
+      user "iam-test-mary", :path=>"/staff/" do
         policy "S3" do
           {"Statement"=>
             [{"Action"=>
@@ -30,22 +30,22 @@ describe 'update' do
         end
       end
 
-      group "Admin", :path=>"/admin/" do
+      group "iam-test-Admin", :path=>"/admin/" do
         policy "Admin" do
           {"Statement"=>[{"Effect"=>"Allow", "Action"=>"*", "Resource"=>"*"}]}
         end
       end
 
-      group "SES", :path=>"/ses/" do
+      group "iam-test-SES", :path=>"/ses/" do
         policy "ses-policy" do
           {"Statement"=>
             [{"Effect"=>"Allow", "Action"=>"ses:SendRawEmail", "Resource"=>"*"}]}
         end
       end
 
-      role "my-role", :path=>"/any/" do
+      role "iam-test-my-role", :path=>"/any/" do
         instance_profiles(
-          "my-instance-profile"
+          "iam-test-my-instance-profile"
         )
 
         assume_role_policy_document do
@@ -67,15 +67,15 @@ describe 'update' do
         end
       end
 
-      instance_profile "my-instance-profile", :path=>"/profile/"
+      instance_profile "iam-test-my-instance-profile", :path=>"/profile/"
     RUBY
   end
 
   let(:expected) do
     {:users=>
-      {"bob"=>
+      {"iam-test-bob"=>
         {:path=>"/devloper/",
-         :groups=>["Admin", "SES"],
+         :groups=>["iam-test-Admin", "iam-test-SES"],
          :attached_managed_policies=>[],
          :policies=>
           {"S3"=>
@@ -84,7 +84,7 @@ describe 'update' do
                 "Effect"=>"Allow",
                 "Resource"=>"*"}]}},
          :login_profile=>{:password_reset_required=>true}},
-       "mary"=>
+       "iam-test-mary"=>
         {:path=>"/staff/",
          :groups=>[],
          :attached_managed_policies=>[],
@@ -95,13 +95,13 @@ describe 'update' do
                 "Effect"=>"Allow",
                 "Resource"=>"*"}]}}}},
      :groups=>
-      {"Admin"=>
+      {"iam-test-Admin"=>
         {:path=>"/admin/",
           :attached_managed_policies=>[],
          :policies=>
           {"Admin"=>
             {"Statement"=>[{"Effect"=>"Allow", "Action"=>"*", "Resource"=>"*"}]}}},
-       "SES"=>
+       "iam-test-SES"=>
         {:path=>"/ses/",
           :attached_managed_policies=>[],
          :policies=>
@@ -112,7 +112,7 @@ describe 'update' do
                 "Resource"=>"*"}]}}}},
      :policies=>{},
      :roles=>
-      {"my-role"=>
+      {"iam-test-my-role"=>
         {:path=>"/any/",
          :assume_role_policy_document=>
           {"Version"=>"2012-10-17",
@@ -121,7 +121,7 @@ describe 'update' do
               "Effect"=>"Allow",
               "Principal"=>{"Service"=>"ec2.amazonaws.com"},
               "Action"=>"sts:AssumeRole"}]},
-         :instance_profiles=>["my-instance-profile"],
+         :instance_profiles=>["iam-test-my-instance-profile"],
          :attached_managed_policies=>[],
          :policies=>
           {"role-policy"=>
@@ -129,7 +129,7 @@ describe 'update' do
               [{"Action"=>["s3:Get*", "s3:List*"],
                 "Effect"=>"Allow",
                 "Resource"=>"*"}]}}}},
-     :instance_profiles=>{"my-instance-profile"=>{:path=>"/profile/"}}}
+     :instance_profiles=>{"iam-test-my-instance-profile"=>{:path=>"/profile/"}}}
   end
 
   before(:each) do
@@ -149,12 +149,12 @@ describe 'update' do
   context 'when update policy' do
     let(:update_policy_dsl) do
       <<-RUBY
-        user "bob", :path=>"/devloper/" do
+        user "iam-test-bob", :path=>"/devloper/" do
           login_profile :password_reset_required=>true
 
           groups(
-            "Admin",
-            "SES"
+            "iam-test-Admin",
+            "iam-test-SES"
           )
 
           policy "S3" do
@@ -167,7 +167,7 @@ describe 'update' do
           end
         end
 
-        user "mary", :path=>"/staff/" do
+        user "iam-test-mary", :path=>"/staff/" do
           policy "S3" do
             {"Statement"=>
               [{"Action"=>
@@ -179,22 +179,22 @@ describe 'update' do
           end
         end
 
-        group "Admin", :path=>"/admin/" do
+        group "iam-test-Admin", :path=>"/admin/" do
           policy "Admin" do
             {"Statement"=>[{"Effect"=>"Allow", "Action"=>"*", "Resource"=>"*"}]}
           end
         end
 
-        group "SES", :path=>"/ses/" do
+        group "iam-test-SES", :path=>"/ses/" do
           policy "ses-policy" do
             {"Statement"=>
               [{"Effect"=>"Allow", "Action"=>"*", "Resource"=>"*"}]}
           end
         end
 
-        role "my-role", :path=>"/any/" do
+        role "iam-test-my-role", :path=>"/any/" do
           instance_profiles(
-            "my-instance-profile"
+            "iam-test-my-instance-profile"
           )
 
           assume_role_policy_document do
@@ -217,7 +217,7 @@ describe 'update' do
           end
         end
 
-        instance_profile "my-instance-profile", :path=>"/profile/"
+        instance_profile "iam-test-my-instance-profile", :path=>"/profile/"
       RUBY
     end
 
@@ -226,9 +226,9 @@ describe 'update' do
     it do
       updated = apply(subject) { update_policy_dsl }
       expect(updated).to be_truthy
-      expected[:users]["mary"][:policies]["S3"]["Statement"][0]["Action"] = ["s3:Get*", "s3:List*", "s3:Put*"]
-      expected[:groups]["SES"][:policies]["ses-policy"]["Statement"][0]["Action"] = "*"
-      expected[:roles]["my-role"][:policies]["role-policy"]["Statement"][0]["Action"] = ["s3:Get*", "s3:List*", "s3:Put*"]
+      expected[:users]["iam-test-mary"][:policies]["S3"]["Statement"][0]["Action"] = ["s3:Get*", "s3:List*", "s3:Put*"]
+      expected[:groups]["iam-test-SES"][:policies]["ses-policy"]["Statement"][0]["Action"] = "*"
+      expected[:roles]["iam-test-my-role"][:policies]["role-policy"]["Statement"][0]["Action"] = ["s3:Get*", "s3:List*", "s3:Put*"]
       expect(export).to eq expected
     end
   end
@@ -236,12 +236,12 @@ describe 'update' do
   context 'when update path' do
     let(:update_path_dsl) do
       <<-RUBY
-        user "bob", :path=>"/devloper/" do
+        user "iam-test-bob", :path=>"/devloper/" do
           login_profile :password_reset_required=>true
 
           groups(
-            "Admin",
-            "SES"
+            "iam-test-Admin",
+            "iam-test-SES"
           )
 
           policy "S3" do
@@ -254,7 +254,7 @@ describe 'update' do
           end
         end
 
-        user "mary", :path=>"/xstaff/" do
+        user "iam-test-mary", :path=>"/xstaff/" do
           policy "S3" do
             {"Statement"=>
               [{"Action"=>
@@ -265,22 +265,22 @@ describe 'update' do
           end
         end
 
-        group "Admin", :path=>"/admin/" do
+        group "iam-test-Admin", :path=>"/admin/" do
           policy "Admin" do
             {"Statement"=>[{"Effect"=>"Allow", "Action"=>"*", "Resource"=>"*"}]}
           end
         end
 
-        group "SES", :path=>"/ses/ses/" do
+        group "iam-test-SES", :path=>"/ses/ses/" do
           policy "ses-policy" do
             {"Statement"=>
               [{"Effect"=>"Allow", "Action"=>"ses:SendRawEmail", "Resource"=>"*"}]}
           end
         end
 
-        role "my-role", :path=>"/any/" do
+        role "iam-test-my-role", :path=>"/any/" do
           instance_profiles(
-            "my-instance-profile"
+            "iam-test-my-instance-profile"
           )
 
           assume_role_policy_document do
@@ -302,7 +302,7 @@ describe 'update' do
           end
         end
 
-        instance_profile "my-instance-profile", :path=>"/profile/"
+        instance_profile "iam-test-my-instance-profile", :path=>"/profile/"
       RUBY
     end
 
@@ -311,8 +311,8 @@ describe 'update' do
     it do
       updated = apply(subject) { update_path_dsl }
       expect(updated).to be_truthy
-      expected[:users]["mary"][:path] = "/xstaff/"
-      expected[:groups]["SES"][:path] = "/ses/ses/"
+      expected[:users]["iam-test-mary"][:path] = "/xstaff/"
+      expected[:groups]["iam-test-SES"][:path] = "/ses/ses/"
       expect(export).to eq expected
     end
   end
@@ -320,12 +320,12 @@ describe 'update' do
   context 'when update path (role, instance_profile)' do
     let(:cannot_update_path_dsl) do
       <<-RUBY
-        user "bob", :path=>"/devloper/" do
+        user "iam-test-bob", :path=>"/devloper/" do
           login_profile :password_reset_required=>true
 
           groups(
-            "Admin",
-            "SES"
+            "iam-test-Admin",
+            "iam-test-SES"
           )
 
           policy "S3" do
@@ -338,7 +338,7 @@ describe 'update' do
           end
         end
 
-        user "mary", :path=>"/staff/" do
+        user "iam-test-mary", :path=>"/staff/" do
           policy "S3" do
             {"Statement"=>
               [{"Action"=>
@@ -349,22 +349,22 @@ describe 'update' do
           end
         end
 
-        group "Admin", :path=>"/admin/" do
+        group "iam-test-Admin", :path=>"/admin/" do
           policy "Admin" do
             {"Statement"=>[{"Effect"=>"Allow", "Action"=>"*", "Resource"=>"*"}]}
           end
         end
 
-        group "SES", :path=>"/ses/" do
+        group "iam-test-SES", :path=>"/ses/" do
           policy "ses-policy" do
             {"Statement"=>
               [{"Effect"=>"Allow", "Action"=>"ses:SendRawEmail", "Resource"=>"*"}]}
           end
         end
 
-        role "my-role", :path=>"/any/xxx/" do
+        role "iam-test-my-role", :path=>"/any/xxx/" do
           instance_profiles(
-            "my-instance-profile"
+            "iam-test-my-instance-profile"
           )
 
           assume_role_policy_document do
@@ -386,14 +386,14 @@ describe 'update' do
           end
         end
 
-        instance_profile "my-instance-profile", :path=>"/profile/xxx/"
+        instance_profile "iam-test-my-instance-profile", :path=>"/profile/xxx/"
       RUBY
     end
 
     let(:logger) do
       logger = Logger.new('/dev/null')
-      expect(logger).to receive(:warn).with("[WARN] Role `my-role`: 'path' cannot be updated")
-      expect(logger).to receive(:warn).with("[WARN] InstanceProfile `my-instance-profile`: 'path' cannot be updated")
+      expect(logger).to receive(:warn).with("[WARN] Role `iam-test-my-role`: 'path' cannot be updated")
+      expect(logger).to receive(:warn).with("[WARN] InstanceProfile `iam-test-my-instance-profile`: 'path' cannot be updated")
       logger
     end
 
@@ -409,12 +409,12 @@ describe 'update' do
   context 'when update assume_role_policy' do
     let(:update_assume_role_policy_dsl) do
       <<-RUBY
-        user "bob", :path=>"/devloper/" do
+        user "iam-test-bob", :path=>"/devloper/" do
           login_profile :password_reset_required=>true
 
           groups(
-            "Admin",
-            "SES"
+            "iam-test-Admin",
+            "iam-test-SES"
           )
 
           policy "S3" do
@@ -427,7 +427,7 @@ describe 'update' do
           end
         end
 
-        user "mary", :path=>"/staff/" do
+        user "iam-test-mary", :path=>"/staff/" do
           policy "S3" do
             {"Statement"=>
               [{"Action"=>
@@ -438,22 +438,22 @@ describe 'update' do
           end
         end
 
-        group "Admin", :path=>"/admin/" do
+        group "iam-test-Admin", :path=>"/admin/" do
           policy "Admin" do
             {"Statement"=>[{"Effect"=>"Allow", "Action"=>"*", "Resource"=>"*"}]}
           end
         end
 
-        group "SES", :path=>"/ses/" do
+        group "iam-test-SES", :path=>"/ses/" do
           policy "ses-policy" do
             {"Statement"=>
               [{"Effect"=>"Allow", "Action"=>"ses:SendRawEmail", "Resource"=>"*"}]}
           end
         end
 
-        role "my-role", :path=>"/any/" do
+        role "iam-test-my-role", :path=>"/any/" do
           instance_profiles(
-            "my-instance-profile"
+            "iam-test-my-instance-profile"
           )
 
           assume_role_policy_document do
@@ -475,7 +475,7 @@ describe 'update' do
           end
         end
 
-        instance_profile "my-instance-profile", :path=>"/profile/"
+        instance_profile "iam-test-my-instance-profile", :path=>"/profile/"
       RUBY
     end
 
@@ -484,7 +484,7 @@ describe 'update' do
     it do
       updated = apply(subject) { update_assume_role_policy_dsl }
       expect(updated).to be_truthy
-      expected[:roles]["my-role"][:assume_role_policy_document]["Statement"][0]["Sid"] = "SID"
+      expected[:roles]["iam-test-my-role"][:assume_role_policy_document]["Statement"][0]["Sid"] = "SID"
       expect(export).to eq expected
     end
   end
@@ -492,11 +492,11 @@ describe 'update' do
   context 'when update groups' do
     let(:update_groups_dsl) do
       <<-RUBY
-        user "bob", :path=>"/devloper/" do
+        user "iam-test-bob", :path=>"/devloper/" do
           login_profile :password_reset_required=>true
 
           groups(
-            "Admin"
+            "iam-test-Admin"
           )
 
           policy "S3" do
@@ -509,10 +509,10 @@ describe 'update' do
           end
         end
 
-        user "mary", :path=>"/staff/" do
+        user "iam-test-mary", :path=>"/staff/" do
           groups(
-            "Admin",
-            "SES"
+            "iam-test-Admin",
+            "iam-test-SES"
           )
 
           policy "S3" do
@@ -525,22 +525,22 @@ describe 'update' do
           end
         end
 
-        group "Admin", :path=>"/admin/" do
+        group "iam-test-Admin", :path=>"/admin/" do
           policy "Admin" do
             {"Statement"=>[{"Effect"=>"Allow", "Action"=>"*", "Resource"=>"*"}]}
           end
         end
 
-        group "SES", :path=>"/ses/" do
+        group "iam-test-SES", :path=>"/ses/" do
           policy "ses-policy" do
             {"Statement"=>
               [{"Effect"=>"Allow", "Action"=>"ses:SendRawEmail", "Resource"=>"*"}]}
           end
         end
 
-        role "my-role", :path=>"/any/" do
+        role "iam-test-my-role", :path=>"/any/" do
           instance_profiles(
-            "my-instance-profile"
+            "iam-test-my-instance-profile"
           )
 
           assume_role_policy_document do
@@ -562,7 +562,7 @@ describe 'update' do
           end
         end
 
-        instance_profile "my-instance-profile", :path=>"/profile/"
+        instance_profile "iam-test-my-instance-profile", :path=>"/profile/"
       RUBY
     end
 
@@ -571,8 +571,8 @@ describe 'update' do
     it do
       updated = apply(subject) { update_groups_dsl }
       expect(updated).to be_truthy
-      expected[:users]["bob"][:groups] = ["Admin"]
-      expected[:users]["mary"][:groups] = ["Admin", "SES"]
+      expected[:users]["iam-test-bob"][:groups] = ["iam-test-Admin"]
+      expected[:users]["iam-test-mary"][:groups] = ["iam-test-Admin", "iam-test-SES"]
       expect(export).to eq expected
     end
   end
@@ -580,12 +580,12 @@ describe 'update' do
   context 'when update login_profile' do
     let(:update_login_profile_dsl) do
       <<-RUBY
-        user "bob", :path=>"/devloper/" do
+        user "iam-test-bob", :path=>"/devloper/" do
           login_profile :password_reset_required=>false
 
           groups(
-            "Admin",
-            "SES"
+            "iam-test-Admin",
+            "iam-test-SES"
           )
 
           policy "S3" do
@@ -598,7 +598,7 @@ describe 'update' do
           end
         end
 
-        user "mary", :path=>"/staff/" do
+        user "iam-test-mary", :path=>"/staff/" do
           policy "S3" do
             {"Statement"=>
               [{"Action"=>
@@ -609,22 +609,22 @@ describe 'update' do
           end
         end
 
-        group "Admin", :path=>"/admin/" do
+        group "iam-test-Admin", :path=>"/admin/" do
           policy "Admin" do
             {"Statement"=>[{"Effect"=>"Allow", "Action"=>"*", "Resource"=>"*"}]}
           end
         end
 
-        group "SES", :path=>"/ses/" do
+        group "iam-test-SES", :path=>"/ses/" do
           policy "ses-policy" do
             {"Statement"=>
               [{"Effect"=>"Allow", "Action"=>"ses:SendRawEmail", "Resource"=>"*"}]}
           end
         end
 
-        role "my-role", :path=>"/any/" do
+        role "iam-test-my-role", :path=>"/any/" do
           instance_profiles(
-            "my-instance-profile"
+            "iam-test-my-instance-profile"
           )
 
           assume_role_policy_document do
@@ -646,7 +646,7 @@ describe 'update' do
           end
         end
 
-        instance_profile "my-instance-profile", :path=>"/profile/"
+        instance_profile "iam-test-my-instance-profile", :path=>"/profile/"
       RUBY
     end
 
@@ -655,7 +655,7 @@ describe 'update' do
     it do
       updated = apply(subject) { update_login_profile_dsl }
       expect(updated).to be_truthy
-      expected[:users]["bob"][:login_profile][:password_reset_required] = false
+      expected[:users]["iam-test-bob"][:login_profile][:password_reset_required] = false
       expect(export).to eq expected
     end
   end
@@ -663,10 +663,10 @@ describe 'update' do
   context 'when delete login_profile' do
     let(:delete_login_profile_dsl) do
       <<-RUBY
-        user "bob", :path=>"/devloper/" do
+        user "iam-test-bob", :path=>"/devloper/" do
           groups(
-            "Admin",
-            "SES"
+            "iam-test-Admin",
+            "iam-test-SES"
           )
 
           policy "S3" do
@@ -679,7 +679,7 @@ describe 'update' do
           end
         end
 
-        user "mary", :path=>"/staff/" do
+        user "iam-test-mary", :path=>"/staff/" do
           policy "S3" do
             {"Statement"=>
               [{"Action"=>
@@ -690,22 +690,22 @@ describe 'update' do
           end
         end
 
-        group "Admin", :path=>"/admin/" do
+        group "iam-test-Admin", :path=>"/admin/" do
           policy "Admin" do
             {"Statement"=>[{"Effect"=>"Allow", "Action"=>"*", "Resource"=>"*"}]}
           end
         end
 
-        group "SES", :path=>"/ses/" do
+        group "iam-test-SES", :path=>"/ses/" do
           policy "ses-policy" do
             {"Statement"=>
               [{"Effect"=>"Allow", "Action"=>"ses:SendRawEmail", "Resource"=>"*"}]}
           end
         end
 
-        role "my-role", :path=>"/any/" do
+        role "iam-test-my-role", :path=>"/any/" do
           instance_profiles(
-            "my-instance-profile"
+            "iam-test-my-instance-profile"
           )
 
           assume_role_policy_document do
@@ -727,7 +727,7 @@ describe 'update' do
           end
         end
 
-        instance_profile "my-instance-profile", :path=>"/profile/"
+        instance_profile "iam-test-my-instance-profile", :path=>"/profile/"
       RUBY
     end
 
@@ -736,7 +736,7 @@ describe 'update' do
     it do
       updated = apply(subject) { delete_login_profile_dsl }
       expect(updated).to be_truthy
-      expected[:users]["bob"].delete(:login_profile)
+      expected[:users]["iam-test-bob"].delete(:login_profile)
       expect(export).to eq expected
     end
   end
@@ -744,16 +744,16 @@ describe 'update' do
   context 'when delete policy' do
     let(:delete_policy_dsl) do
       <<-RUBY
-        user "bob", :path=>"/devloper/" do
+        user "iam-test-bob", :path=>"/devloper/" do
           login_profile :password_reset_required=>true
 
           groups(
-            "Admin",
-            "SES"
+            "iam-test-Admin",
+            "iam-test-SES"
           )
         end
 
-        user "mary", :path=>"/staff/" do
+        user "iam-test-mary", :path=>"/staff/" do
           policy "S3" do
             {"Statement"=>
               [{"Action"=>
@@ -764,18 +764,18 @@ describe 'update' do
           end
         end
 
-        group "Admin", :path=>"/admin/" do
+        group "iam-test-Admin", :path=>"/admin/" do
           policy "Admin" do
             {"Statement"=>[{"Effect"=>"Allow", "Action"=>"*", "Resource"=>"*"}]}
           end
         end
 
-        group "SES", :path=>"/ses/" do
+        group "iam-test-SES", :path=>"/ses/" do
         end
 
-        role "my-role", :path=>"/any/" do
+        role "iam-test-my-role", :path=>"/any/" do
           instance_profiles(
-            "my-instance-profile"
+            "iam-test-my-instance-profile"
           )
 
           assume_role_policy_document do
@@ -788,7 +788,7 @@ describe 'update' do
           end
         end
 
-        instance_profile "my-instance-profile", :path=>"/profile/"
+        instance_profile "iam-test-my-instance-profile", :path=>"/profile/"
       RUBY
     end
 
@@ -797,9 +797,9 @@ describe 'update' do
     it do
       updated = apply(subject) { delete_policy_dsl }
       expect(updated).to be_truthy
-      expected[:users]["bob"][:policies].delete("S3")
-      expected[:groups]["SES"][:policies].delete("ses-policy")
-      expected[:roles]["my-role"][:policies].delete("role-policy")
+      expected[:users]["iam-test-bob"][:policies].delete("S3")
+      expected[:groups]["iam-test-SES"][:policies].delete("ses-policy")
+      expected[:roles]["iam-test-my-role"][:policies].delete("role-policy")
       expect(export).to eq expected
     end
   end
@@ -807,12 +807,12 @@ describe 'update' do
   context 'when update instance_profiles' do
     let(:update_instance_profiles_dsl) do
       <<-RUBY
-        user "bob", :path=>"/devloper/" do
+        user "iam-test-bob", :path=>"/devloper/" do
           login_profile :password_reset_required=>true
 
           groups(
-            "Admin",
-            "SES"
+            "iam-test-Admin",
+            "iam-test-SES"
           )
 
           policy "S3" do
@@ -825,7 +825,7 @@ describe 'update' do
           end
         end
 
-        user "mary", :path=>"/staff/" do
+        user "iam-test-mary", :path=>"/staff/" do
           policy "S3" do
             {"Statement"=>
               [{"Action"=>
@@ -836,22 +836,22 @@ describe 'update' do
           end
         end
 
-        group "Admin", :path=>"/admin/" do
+        group "iam-test-Admin", :path=>"/admin/" do
           policy "Admin" do
             {"Statement"=>[{"Effect"=>"Allow", "Action"=>"*", "Resource"=>"*"}]}
           end
         end
 
-        group "SES", :path=>"/ses/" do
+        group "iam-test-SES", :path=>"/ses/" do
           policy "ses-policy" do
             {"Statement"=>
               [{"Effect"=>"Allow", "Action"=>"ses:SendRawEmail", "Resource"=>"*"}]}
           end
         end
 
-        role "my-role", :path=>"/any/" do
+        role "iam-test-my-role", :path=>"/any/" do
           instance_profiles(
-            "my-instance-profile2"
+            "iam-test-my-instance-profile2"
           )
 
           assume_role_policy_document do
@@ -873,8 +873,8 @@ describe 'update' do
           end
         end
 
-        instance_profile "my-instance-profile", :path=>"/profile/"
-        instance_profile "my-instance-profile2", :path=>"/profile2/"
+        instance_profile "iam-test-my-instance-profile", :path=>"/profile/"
+        instance_profile "iam-test-my-instance-profile2", :path=>"/profile2/"
       RUBY
     end
 
@@ -883,8 +883,8 @@ describe 'update' do
     it do
       updated = apply(subject) { update_instance_profiles_dsl }
       expect(updated).to be_truthy
-      expected[:roles]["my-role"][:instance_profiles] = ["my-instance-profile2"]
-      expected[:instance_profiles]["my-instance-profile2"] = {:path=>"/profile2/"}
+      expected[:roles]["iam-test-my-role"][:instance_profiles] = ["iam-test-my-instance-profile2"]
+      expected[:instance_profiles]["iam-test-my-instance-profile2"] = {:path=>"/profile2/"}
       expect(export).to eq expected
     end
   end

@@ -56,6 +56,7 @@ ARGV.options do |opt|
     opt.on(''  , '--no-color')                      {    options[:color]                = false                                 }
     opt.on(''  , '--no-progress')                   {    options[:no_progress]          = true                                  }
     opt.on(''  , '--debug')                         {    options[:debug]                = true                                  }
+    opt.on(''  , '--enable-delete')                 {    options[:enable_delete]        = true                                  }
     opt.parse!
 
     aws_opts = {}
@@ -169,6 +170,9 @@ begin
   when :apply
     unless File.exist?(file)
       raise "No IAMfile found (looking for: #{file})"
+    end
+    unless options[:target]
+      raise "No required option: `--target TARGET`"
     end
 
     msg = "Apply `#{file}` to IAM"

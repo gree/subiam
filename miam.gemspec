@@ -4,7 +4,7 @@ $LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
 require 'miam/version'
 
 Gem::Specification.new do |spec|
-  spec.name          = 'miam'
+  spec.name          = 'subiam'
   spec.version       = Miam::VERSION
   spec.authors       = ['Genki Sugawara']
   spec.email         = ['sgwr_dts@yahoo.co.jp']

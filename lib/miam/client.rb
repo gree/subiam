@@ -97,16 +97,18 @@ class Miam::Client
       end
     end
 
-    actual.each do |user_name, attrs|
-      next unless target_matched?(user_name)
+    if @options[:enable_delete]
+      actual.each do |user_name, attrs|
+        next unless target_matched?(user_name)
 
-      @driver.delete_user(user_name, attrs)
+        @driver.delete_user(user_name, attrs)
 
-      group_users.each do |group_name, users|
-        users.delete(user_name)
+        group_users.each do |group_name, users|
+          users.delete(user_name)
+        end
+
+        updated = true
       end
-
-      updated = true
     end
 
     updated
@@ -188,17 +190,20 @@ class Miam::Client
       end
     end
 
-    actual.each do |group_name, attrs|
-      next unless target_matched?(group_name)
+    if @options[:enable_delete]
+      actual.each do |group_name, attrs|
+        next unless target_matched?(group_name)
+        next unless @options[:enable_delete]
 
-      users_in_group = group_users.delete(group_name) || []
-      @driver.delete_group(group_name, attrs, users_in_group)
+        users_in_group = group_users.delete(group_name) || []
+        @driver.delete_group(group_name, attrs, users_in_group)
 
-      actual_users.each do |user_name, user_attrs|
-        user_attrs[:groups].delete(group_name)
+        actual_users.each do |user_name, user_attrs|
+          user_attrs[:groups].delete(group_name)
+        end
+
+        updated = true
       end
-
-      updated = true
     end
 
     updated
@@ -226,25 +231,28 @@ class Miam::Client
       end
     end
 
-    actual.each do |role_name, attrs|
-      next unless target_matched?(role_name)
+    if @options[:enable_delete]
+      actual.each do |role_name, attrs|
+        next unless target_matched?(role_name)
 
-      instance_profile_names = []
+        instance_profile_names = []
 
-      instance_profile_roles.each do |instance_profile_name, roles|
-        if roles.include?(role_name)
-          instance_profile_names << instance_profile_name
+        instance_profile_roles.each do |instance_profile_name, roles|
+          if roles.include?(role_name)
+            instance_profile_names << instance_profile_name
+          end
         end
+
+        @driver.delete_role(role_name, instance_profile_names, attrs)
+
+        instance_profile_roles.each do |instance_profile_name, roles|
+          roles.delete(role_name)
+        end
+
+        updated = true
       end
-
-      @driver.delete_role(role_name, instance_profile_names, attrs)
-
-      instance_profile_roles.each do |instance_profile_name, roles|
-        roles.delete(role_name)
-      end
-
-      updated = true
     end
+
 
     updated
   end
@@ -313,17 +321,19 @@ class Miam::Client
       end
     end
 
-    actual.each do |instance_profile_name, attrs|
-      next unless target_matched?(instance_profile_name)
+    if @options[:enable_delete]
+      actual.each do |instance_profile_name, attrs|
+        next unless target_matched?(instance_profile_name)
 
-      roles_in_instance_profile = instance_profile_roles.delete(instance_profile_name) || []
-      @driver.delete_instance_profile(instance_profile_name, attrs, roles_in_instance_profile)
+        roles_in_instance_profile = instance_profile_roles.delete(instance_profile_name) || []
+        @driver.delete_instance_profile(instance_profile_name, attrs, roles_in_instance_profile)
 
-      actual_roles.each do |role_name, role_attrs|
-        role_attrs[:instance_profiles].delete(instance_profile_name)
+        actual_roles.each do |role_name, role_attrs|
+          role_attrs[:instance_profiles].delete(instance_profile_name)
+        end
+
+        updated = true
       end
-
-      updated = true
     end
 
     updated
@@ -445,6 +455,8 @@ class Miam::Client
     updated = false
 
     expected.each do |policy_name, expected_attrs|
+      next unless target_matched?(policy_name)
+
       actual_attrs = actual.delete(policy_name)
 
       if actual_attrs
@@ -478,9 +490,13 @@ class Miam::Client
   def post_walk_managed_policies(actual)
     updated = false
 
-    actual.each do |policy_name, actual_attrs|
-      @driver.delete_managed_policy(policy_name)
-      updated = true
+    if @options[:enable_delete]
+      actual.each do |policy_name, actual_attrs|
+        next unless target_matched?(policy_name)
+
+        @driver.delete_managed_policy(policy_name)
+        updated = true
+      end
     end
 
     updated
