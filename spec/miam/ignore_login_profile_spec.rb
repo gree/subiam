@@ -1,6 +1,8 @@
 describe 'ignore login profile' do
   let(:dsl) do
     <<-RUBY
+      target /^iam-test-/
+
       user "iam-test-bob", :path=>"/devloper/" do
         login_profile :password_reset_required=>true
 
@@ -18,6 +20,8 @@ describe 'ignore login profile' do
 
   let(:update_dsl) do
     <<-RUBY
+      target /^iam-test-/
+
       user "iam-test-bob", :path=>"/devloper/" do
         login_profile :password_reset_required=>false
 

@@ -1,6 +1,8 @@
 describe 'custom managed policy' do
   let(:dsl) do
     <<-RUBY
+      target /^iam-test-/
+
       managed_policy "iam-test-my-policy", :path=>"/" do
         {"Version"=>"2012-10-17",
          "Statement"=>
@@ -71,6 +73,8 @@ describe 'custom managed policy' do
     it do
       updated = apply(subject) {
         <<-RUBY
+          target /^iam-test-/
+
           managed_policy "iam-test-my-policy", :path=>"/" do
             {"Version"=>"2012-10-17",
              "Statement"=>
@@ -117,6 +121,8 @@ describe 'custom managed policy' do
     it do
       updated = apply(subject) {
         <<-RUBY
+          target /^iam-test-/
+
           managed_policy "iam-test-my-policy2", :path=>"/" do
             {"Version"=>"2012-10-17",
              "Statement"=>
@@ -153,6 +159,8 @@ describe 'custom managed policy' do
     it do
       updated = apply(subject) {
         <<-RUBY
+          target /^iam-test-/
+
           managed_policy "iam-test-my-policy", :path=>"/" do
             {"Version"=>"2012-10-17",
              "Statement"=>
@@ -191,6 +199,8 @@ describe 'custom managed policy' do
 
         apply(subject) {
           <<-RUBY
+            target /^iam-test-/
+
             managed_policy "iam-test-my-policy", :path=>"/" do
               {"Version"=>"2012-10-17",
                "Statement"=>

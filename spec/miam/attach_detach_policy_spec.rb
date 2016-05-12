@@ -1,6 +1,8 @@
 describe 'attach/detach policy' do
   let(:dsl) do
     <<-RUBY
+      target /^iam-test-/
+
       user "iam-test-bob", :path=>"/devloper/" do
         login_profile :password_reset_required=>true
 
@@ -174,6 +176,8 @@ describe 'attach/detach policy' do
   context 'when attach policy' do
     let(:update_policy_dsl) do
       <<-RUBY
+        target /^iam-test-/
+
         user "iam-test-bob", :path=>"/devloper/" do
           login_profile :password_reset_required=>true
 
@@ -282,6 +286,8 @@ describe 'attach/detach policy' do
   context 'when detach policy' do
     let(:update_policy_dsl) do
       <<-RUBY
+        target /^iam-test-/
+
         user "iam-test-bob", :path=>"/devloper/" do
           login_profile :password_reset_required=>true
 

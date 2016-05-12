@@ -1,6 +1,8 @@
 describe 'specify target' do
   let(:dsl_another_prefix) do
     <<-RUBY
+      target /.*/
+
       user "another-prefix-bob", :path=>"/devloper/" do
         login_profile :password_reset_required=>true
 
@@ -133,15 +135,14 @@ describe 'specify target' do
   end
 
   before(:each) do
-    c = client(target: nil)
-    apply(c) { dsl_another_prefix }
+    apply { dsl_another_prefix }
   end
 
   context 'apply when empty dsl to exists environment' do
-    subject { client(target: /^iam-test-/) }
+    subject { client }
 
     it 'should change nothing' do
-      updated = apply(subject) { '' }
+      updated = apply(subject) { 'target /^iam-test-/' }
       expect(updated).to be_falsey
       expect(export).to eq expected
     end

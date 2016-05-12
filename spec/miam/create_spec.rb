@@ -3,7 +3,7 @@ describe 'create' do
     subject { client }
 
     it do
-      updated = apply(subject) { '' }
+      updated = apply(subject) { 'target /.*/' }
       expect(updated).to be_falsey
       expect(export).to eq({:users=>{}, :groups=>{}, :roles=>{}, :instance_profiles=>{}, :policies => {}})
     end
@@ -12,6 +12,8 @@ describe 'create' do
   context 'when create user and group' do
     let(:dsl) do
       <<-RUBY
+        target /^iam-test-/
+
         user "iam-test-bob", :path=>"/devloper/" do
           login_profile :password_reset_required=>true
 
@@ -155,6 +157,8 @@ describe 'create' do
       context 'when using template' do
         let(:dsl) do
           <<-RUBY
+            target /^iam-test-/
+
             template "iam-test-bob" do
               login_profile :password_reset_required=>true
 

@@ -20,13 +20,11 @@ MIAM_TEST_ACCOUNT_ID = Aws::IAM::Client.new.get_user.user.user_id
 
 RSpec.configure do |config|
   config.before(:each) do
-    c = client(target: nil)
-    apply(c) { '' }
+    apply { 'target /.*/' }
   end
 
   config.after(:all) do
-    c = client(target: nil)
-    apply(c) { '' }
+    apply { 'target /.*/' }
   end
 end
 
@@ -34,7 +32,6 @@ def client(user_options = {})
   options = {
     logger: Logger.new('/dev/null'),
     no_progress: true,
-    target: /iam-test-/,
     enable_delete: true,
   }
 

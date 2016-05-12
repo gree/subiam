@@ -7,6 +7,7 @@ class Miam::Client
     @iam = Aws::IAM::Client.new(aws_config)
     @driver = Miam::Driver.new(@iam, options)
     @password_manager = options[:password_manager] || Miam::PasswordManager.new('-', options)
+    @target = nil
   end
 
   def export(export_options = {})
@@ -57,6 +58,11 @@ class Miam::Client
 
   def walk(file)
     expected = load_file(file)
+
+    unless expected[:target]
+      raise "Required setting on DSL `target` not found"
+    end
+    @target = expected[:target]
 
     actual, group_users, instance_profile_roles = Miam::Exporter.export(@iam, @options)
     updated = pre_walk_managed_policies(expected[:policies], actual[:policies])
@@ -521,11 +527,7 @@ class Miam::Client
   end
 
   def target_matched?(name)
-    if @options[:target]
-      name =~ @options[:target]
-    else
-      true
-    end
+    name =~ @target
   end
 
   def exec_by_format(proc_by_format)

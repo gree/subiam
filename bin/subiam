@@ -51,7 +51,6 @@ ARGV.options do |opt|
     opt.on(''  , '--split-more')                    {    split                          = :more                                 }
     opt.on('',   '--format=FORMAT', [:ruby, :json]) {|v| format_passed = true; options[:format] = v                             }
     opt.on(''  , '--export-concurrency N', Integer) {|v| options[:export_concurrency]   = v                                     }
-    opt.on(''  , '--target REGEXP')                 {|v| options[:target]               = Regexp.new(v)                         }
     opt.on(''  , '--ignore-login-profile')          {    options[:ignore_login_profile] = true                                  }
     opt.on(''  , '--no-color')                      {    options[:color]                = false                                 }
     opt.on(''  , '--no-progress')                   {    options[:no_progress]          = true                                  }
@@ -170,9 +169,6 @@ begin
   when :apply
     unless File.exist?(file)
       raise "No IAMfile found (looking for: #{file})"
-    end
-    unless options[:target]
-      raise "No required option: `--target TARGET`"
     end
 
     msg = "Apply `#{file}` to IAM"

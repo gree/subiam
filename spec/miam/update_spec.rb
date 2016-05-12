@@ -1,6 +1,8 @@
 describe 'update' do
   let(:dsl) do
     <<-RUBY
+      target /^iam-test-/
+
       user "iam-test-bob", :path=>"/devloper/" do
         login_profile :password_reset_required=>true
 
@@ -149,6 +151,8 @@ describe 'update' do
   context 'when update policy' do
     let(:update_policy_dsl) do
       <<-RUBY
+        target /^iam-test-/
+
         user "iam-test-bob", :path=>"/devloper/" do
           login_profile :password_reset_required=>true
 
@@ -236,6 +240,8 @@ describe 'update' do
   context 'when update path' do
     let(:update_path_dsl) do
       <<-RUBY
+        target /^iam-test-/
+
         user "iam-test-bob", :path=>"/devloper/" do
           login_profile :password_reset_required=>true
 
@@ -320,6 +326,8 @@ describe 'update' do
   context 'when update path (role, instance_profile)' do
     let(:cannot_update_path_dsl) do
       <<-RUBY
+        target /^iam-test-/
+
         user "iam-test-bob", :path=>"/devloper/" do
           login_profile :password_reset_required=>true
 
@@ -409,6 +417,8 @@ describe 'update' do
   context 'when update assume_role_policy' do
     let(:update_assume_role_policy_dsl) do
       <<-RUBY
+        target /^iam-test-/
+
         user "iam-test-bob", :path=>"/devloper/" do
           login_profile :password_reset_required=>true
 
@@ -492,6 +502,8 @@ describe 'update' do
   context 'when update groups' do
     let(:update_groups_dsl) do
       <<-RUBY
+        target /^iam-test-/
+
         user "iam-test-bob", :path=>"/devloper/" do
           login_profile :password_reset_required=>true
 
@@ -580,6 +592,8 @@ describe 'update' do
   context 'when update login_profile' do
     let(:update_login_profile_dsl) do
       <<-RUBY
+        target /^iam-test-/
+
         user "iam-test-bob", :path=>"/devloper/" do
           login_profile :password_reset_required=>false
 
@@ -663,6 +677,8 @@ describe 'update' do
   context 'when delete login_profile' do
     let(:delete_login_profile_dsl) do
       <<-RUBY
+        target /^iam-test-/
+
         user "iam-test-bob", :path=>"/devloper/" do
           groups(
             "iam-test-Admin",
@@ -744,6 +760,8 @@ describe 'update' do
   context 'when delete policy' do
     let(:delete_policy_dsl) do
       <<-RUBY
+        target /^iam-test-/
+
         user "iam-test-bob", :path=>"/devloper/" do
           login_profile :password_reset_required=>true
 
@@ -807,6 +825,8 @@ describe 'update' do
   context 'when update instance_profiles' do
     let(:update_instance_profiles_dsl) do
       <<-RUBY
+        target /^iam-test-/
+
         user "iam-test-bob", :path=>"/devloper/" do
           login_profile :password_reset_required=>true
 
