@@ -1,11 +1,11 @@
 #!/usr/bin/env ruby
 $: << File.expand_path("#{File.dirname __FILE__}/../lib")
 require 'rubygems'
-require 'miam'
+require 'subiam'
 require 'fileutils'
 require 'optparse'
 
-Version = Miam::VERSION
+Version = Subiam::VERSION
 DEFAULT_FILENAME = 'IAMfile'
 
 mode = nil
@@ -25,7 +25,7 @@ options = {
   :debug   => false,
 }
 
-options[:password_manager] = Miam::PasswordManager.new(account_output, options)
+options[:password_manager] = Subiam::PasswordManager.new(account_output, options)
 
 ARGV.options do |opt|
   begin
@@ -44,7 +44,7 @@ ARGV.options do |opt|
     opt.on('-a', '--apply')                         {    mode                           = :apply                                }
     opt.on('-f', '--file FILE')                     {|v| file                           = v                                     }
     opt.on(''  , '--dry-run')                       {    options[:dry_run]              = true                                  }
-    opt.on(''  , '--account-output FILE')           {|v| options[:password_manager]     = Miam::PasswordManager.new(v, options) }
+    opt.on(''  , '--account-output FILE')           {|v| options[:password_manager]     = Subiam::PasswordManager.new(v, options) }
     opt.on('-e', '--export')                        {    mode                           = :export                               }
     opt.on('-o', '--output FILE')                   {|v| output_file                    = v                                     }
     opt.on(''  , '--split')                         {    split                          = true                                  }
@@ -93,14 +93,14 @@ String.colorize = options[:color]
 if options[:debug]
   Aws.config.update(
     :http_wire_trace => true,
-    :logger => Miam::Logger.instance
+    :logger => Subiam::Logger.instance
   )
 end
 
 begin
-  logger = Miam::Logger.instance
+  logger = Subiam::Logger.instance
   logger.set_debug(options[:debug])
-  client = Miam::Client.new(options)
+  client = Subiam::Client.new(options)
 
   case mode
   when :export

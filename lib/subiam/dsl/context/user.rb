@@ -1,5 +1,5 @@
-class Miam::DSL::Context::User
-  include Miam::TemplateHelper
+class Subiam::DSL::Context::User
+  include Subiam::TemplateHelper
 
   def initialize(context, name, &block)
     @user_name = name

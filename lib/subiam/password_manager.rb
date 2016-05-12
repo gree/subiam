@@ -1,5 +1,5 @@
-class Miam::PasswordManager
-  include Miam::Logger::Helper
+class Subiam::PasswordManager
+  include Subiam::Logger::Helper
 
   def initialize(output, options = {})
     @output = output

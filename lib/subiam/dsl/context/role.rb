@@ -1,5 +1,5 @@
-class Miam::DSL::Context::Role
-  include Miam::TemplateHelper
+class Subiam::DSL::Context::Role
+  include Subiam::TemplateHelper
 
   def initialize(context, name, &block)
     @role_name = name

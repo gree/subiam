@@ -1,18 +1,16 @@
 # coding: utf-8
 lib = File.expand_path('../lib', __FILE__)
 $LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
-require 'miam/version'
+require 'subiam/version'
 
 Gem::Specification.new do |spec|
   spec.name          = 'subiam'
-  spec.version       = Miam::VERSION
-  spec.authors       = ['Genki Sugawara']
-  spec.email         = ['sgwr_dts@yahoo.co.jp']
-  spec.summary       = %q{TODO: Write a short summary. Required.}
-  spec.description   = %q{TODO: Write a longer description. Optional.}
-  spec.summary       = %q{Miam is a tool to manage IAM.}
-  spec.description   = %q{Miam is a tool to manage IAM. It defines the state of IAM using DSL, and updates IAM according to DSL.}
-  spec.homepage      = 'http://miam.codenize.tools/'
+  spec.version       = Subiam::VERSION
+  spec.authors       = ['Genki Sugawara', 'Yuya YAGUCHI']
+  spec.email         = ['yuya.yaguchi@gree.net']
+  spec.summary       = %q{Subiam is a tool to manage IAM. Forked from Miam.}
+  spec.description   = %q{Subiam is a tool to manage IAM. It defines the state of IAM using DSL, and updates IAM according to DSL. Forked from Miam.}
+  spec.homepage      = 'https://github.com/yayugu/subiam'
   spec.license       = 'MIT'
 
   spec.files         = `git ls-files -z`.split("\x0")

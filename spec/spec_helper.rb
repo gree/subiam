@@ -9,7 +9,7 @@ if ENV['TRAVIS']
 end
 
 require 'tempfile'
-require 'miam'
+require 'subiam'
 
 Aws.config.update(
   access_key_id: ENV['MIAM_TEST_ACCESS_KEY_ID'] || 'scott',
@@ -35,10 +35,10 @@ def client(user_options = {})
     enable_delete: true,
   }
 
-  options[:password_manager] = Miam::PasswordManager.new('/dev/null', options)
+  options[:password_manager] = Subiam::PasswordManager.new('/dev/null', options)
 
   if_debug do
-    logger = Miam::Logger.instance
+    logger = Subiam::Logger.instance
     logger.set_debug(true)
 
     options.update(
@@ -52,7 +52,7 @@ def client(user_options = {})
   end
 
   options = options.merge(user_options)
-  Miam::Client.new(options)
+  Subiam::Client.new(options)
 end
 
 def tempfile(content, options = {})
@@ -81,7 +81,7 @@ end
 def export(options = {})
   options = {no_progress: true}.merge(options)
   cli = options.delete(:client) || Aws::IAM::Client.new
-  Miam::Exporter.export(cli, options)[0]
+  Subiam::Exporter.export(cli, options)[0]
 end
 
 def if_debug

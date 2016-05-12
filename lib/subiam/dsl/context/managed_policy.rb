@@ -1,5 +1,5 @@
-class Miam::DSL::Context::ManagedPolicy
-  include Miam::TemplateHelper
+class Subiam::DSL::Context::ManagedPolicy
+  include Subiam::TemplateHelper
 
   def initialize(context, name, &block)
     @policy_name = name

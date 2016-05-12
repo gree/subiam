@@ -1,17 +1,17 @@
-class Miam::Client
-  include Miam::Logger::Helper
+class Subiam::Client
+  include Subiam::Logger::Helper
 
   def initialize(options = {})
     @options = {:format => :ruby}.merge(options)
     aws_config = options.delete(:aws_config) || {}
     @iam = Aws::IAM::Client.new(aws_config)
-    @driver = Miam::Driver.new(@iam, options)
-    @password_manager = options[:password_manager] || Miam::PasswordManager.new('-', options)
+    @driver = Subiam::Driver.new(@iam, options)
+    @password_manager = options[:password_manager] || Subiam::PasswordManager.new('-', options)
     @target = nil
   end
 
   def export(export_options = {})
-    exported, group_users, instance_profile_roles = Miam::Exporter.export(@iam, @options)
+    exported, group_users, instance_profile_roles = Subiam::Exporter.export(@iam, @options)
     exported.sort_array!
 
     if block_given?
@@ -25,7 +25,7 @@ class Miam::Client
             more_splitted[type][name] = attrs
 
             dsl = exec_by_format(
-              :ruby => proc { Miam::DSL.convert(more_splitted, @options).strip },
+              :ruby => proc { Subiam::DSL.convert(more_splitted, @options).strip },
               :json => proc { JSON.pretty_generate(more_splitted) }
             )
 
@@ -35,7 +35,7 @@ class Miam::Client
           splitted[type] = exported[type]
 
           dsl = exec_by_format(
-            :ruby => proc { Miam::DSL.convert(splitted, @options).strip },
+            :ruby => proc { Subiam::DSL.convert(splitted, @options).strip },
             :json => proc { JSON.pretty_generate(splitted) }
           )
 
@@ -44,7 +44,7 @@ class Miam::Client
       end
     else
       dsl = exec_by_format(
-        :ruby => proc { Miam::DSL.convert(exported, @options).strip },
+        :ruby => proc { Subiam::DSL.convert(exported, @options).strip },
         :json => proc { JSON.pretty_generate(exported) }
       )
     end
@@ -64,7 +64,7 @@ class Miam::Client
     end
     @target = expected[:target]
 
-    actual, group_users, instance_profile_roles = Miam::Exporter.export(@iam, @options)
+    actual, group_users, instance_profile_roles = Subiam::Exporter.export(@iam, @options)
     updated = pre_walk_managed_policies(expected[:policies], actual[:policies])
     updated = walk_groups(expected[:groups], actual[:groups], actual[:users], group_users) || updated
     updated = walk_users(expected[:users], actual[:users], group_users) || updated
@@ -512,13 +512,13 @@ class Miam::Client
     if file.kind_of?(String)
       open(file) do |f|
         exec_by_format(
-          :ruby => proc { Miam::DSL.parse(f.read, file) },
+          :ruby => proc { Subiam::DSL.parse(f.read, file) },
           :json => proc { load_json(f) }
         )
       end
     elsif file.respond_to?(:read)
       exec_by_format(
-        :ruby => proc { Miam::DSL.parse(file.read, file.path) },
+        :ruby => proc { Subiam::DSL.parse(file.read, file.path) },
         :json => proc { load_json(f) }
       )
     else

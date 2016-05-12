@@ -1,4 +1,4 @@
-# subiam which forked from miam doesn't use delete
+# subiam which forked from subiam doesn't use delete
 xdescribe 'delete' do
   let(:dsl) do
     <<-RUBY

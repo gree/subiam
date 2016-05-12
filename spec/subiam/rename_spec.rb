@@ -1,4 +1,4 @@
-# subiam which forked from miam doesn't use top level entity rename
+# subiam which forked from subiam doesn't use top level entity rename
 xdescribe 'update' do
   let(:dsl) do
     <<-RUBY

@@ -1,4 +1,4 @@
-module Miam
+module Subiam
   module TemplateHelper
     def include_template(template_name, context = {})
       tmplt = @context.templates[template_name.to_s]

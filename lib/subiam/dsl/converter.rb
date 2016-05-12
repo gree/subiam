@@ -1,4 +1,4 @@
-class Miam::DSL::Converter
+class Subiam::DSL::Converter
   def self.convert(exported, options = {})
     self.new(exported, options).convert
   end
@@ -31,7 +31,7 @@ class Miam::DSL::Converter
     user_options = {:path => attrs[:path]}
 
     <<-EOS
-user #{user_name.inspect}, #{Miam::Utils.unbrace(user_options.inspect)} do
+user #{user_name.inspect}, #{Subiam::Utils.unbrace(user_options.inspect)} do
   #{output_login_profile(attrs[:login_profile])}
 
   #{output_user_groups(attrs[:groups])}
@@ -56,7 +56,7 @@ end
 
   def output_login_profile(login_profile)
     if login_profile
-      "login_profile #{Miam::Utils.unbrace(login_profile.inspect)}"
+      "login_profile #{Subiam::Utils.unbrace(login_profile.inspect)}"
     else
       '# login_profile :password_reset_required=>true'
     end
@@ -73,7 +73,7 @@ end
     group_options = {:path => attrs[:path]}
 
     <<-EOS
-group #{group_name.inspect}, #{Miam::Utils.unbrace(group_options.inspect)} do
+group #{group_name.inspect}, #{Subiam::Utils.unbrace(group_options.inspect)} do
   #{output_policies(attrs[:policies])}
 
   #{output_attached_managed_policies(attrs[:attached_managed_policies])}
@@ -92,7 +92,7 @@ end
     role_options = {:path => attrs[:path]}
 
     <<-EOS
-role #{role_name.inspect}, #{Miam::Utils.unbrace(role_options.inspect)} do
+role #{role_name.inspect}, #{Subiam::Utils.unbrace(role_options.inspect)} do
   #{output_role_instance_profiles(attrs[:instance_profiles])}
 
   #{output_assume_role_policy_document(attrs[:assume_role_policy_document])}
@@ -137,7 +137,7 @@ end
     instance_profile_options = {:path => attrs[:path]}
 
     <<-EOS
-instance_profile #{instance_profile_name.inspect}, #{Miam::Utils.unbrace(instance_profile_options.inspect)}
+instance_profile #{instance_profile_name.inspect}, #{Subiam::Utils.unbrace(instance_profile_options.inspect)}
     EOS
   end
 
@@ -186,7 +186,7 @@ instance_profile #{instance_profile_name.inspect}, #{Miam::Utils.unbrace(instanc
     policy_document.gsub!("\n", "\n    ").strip!
 
     <<-EOS
-managed_policy #{policy_name.inspect}, #{Miam::Utils.unbrace(policy_options.inspect)} do
+managed_policy #{policy_name.inspect}, #{Subiam::Utils.unbrace(policy_options.inspect)} do
   #{policy_document}
 end
     EOS

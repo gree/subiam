@@ -1,4 +1,4 @@
-class Miam::Utils
+class Subiam::Utils
   class << self
     def unbrace(str)
       str.sub(/\A\s*\{/, '').sub(/\}\s*\z/, '')

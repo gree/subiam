@@ -1,5 +1,5 @@
 # coding: utf-8
-class Miam::Exporter
+class Subiam::Exporter
   AWS_MANAGED_POLICY_PREFIX = 'arn:aws:iam::aws:'
 
   def self.export(iam, options = {})

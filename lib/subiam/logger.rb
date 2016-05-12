@@ -1,4 +1,4 @@
-class Miam::Logger < ::Logger
+class Subiam::Logger < ::Logger
   include Singleton
 
   def initialize
@@ -20,7 +20,7 @@ class Miam::Logger < ::Logger
       message = "[#{level.to_s.upcase}] #{message}" unless level == :info
       message << ' (dry-run)' if @options[:dry_run]
       message = message.send(log_options[:color]) if log_options[:color]
-      logger = @options[:logger] || Miam::Logger.instance
+      logger = @options[:logger] || Subiam::Logger.instance
       logger.send(level, message)
     end
   end

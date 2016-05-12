@@ -1,5 +1,5 @@
-class Miam::DSL::Context::Group
-  include Miam::TemplateHelper
+class Subiam::DSL::Context::Group
+  include Subiam::TemplateHelper
 
   def initialize(context, name, &block)
     @group_name = name

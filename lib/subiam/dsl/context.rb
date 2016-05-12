@@ -1,5 +1,5 @@
-class Miam::DSL::Context
-  include Miam::TemplateHelper
+class Subiam::DSL::Context
+  include Subiam::TemplateHelper
 
   def self.eval(dsl, path, options = {})
     self.new(path, options) {
@@ -52,7 +52,7 @@ class Miam::DSL::Context
       raise "User `#{name}` is already defined"
     end
 
-    attrs = Miam::DSL::Context::User.new(@context, name, &block).result
+    attrs = Subiam::DSL::Context::User.new(@context, name, &block).result
     @result[:users][name] = user_options.merge(attrs)
   end
 
@@ -63,7 +63,7 @@ class Miam::DSL::Context
       raise "Group `#{name}` is already defined"
     end
 
-    attrs = Miam::DSL::Context::Group.new(@context, name, &block).result
+    attrs = Subiam::DSL::Context::Group.new(@context, name, &block).result
     @result[:groups][name] = group_options.merge(attrs)
   end
 
@@ -74,7 +74,7 @@ class Miam::DSL::Context
       raise "Role `#{name}` is already defined"
     end
 
-    attrs = Miam::DSL::Context::Role.new(@context, name, &block).result
+    attrs = Subiam::DSL::Context::Role.new(@context, name, &block).result
     @result[:roles][name] = role_options.merge(attrs)
   end
 
@@ -95,7 +95,7 @@ class Miam::DSL::Context
       raise "ManagedPolicy `#{name}` is already defined"
     end
 
-    attrs = Miam::DSL::Context::ManagedPolicy.new(@context, name, &block).result
+    attrs = Subiam::DSL::Context::ManagedPolicy.new(@context, name, &block).result
     @result[:policies][name] = policy_options.merge(attrs)
   end
 end
