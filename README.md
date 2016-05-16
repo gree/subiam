@@ -140,7 +140,7 @@ end
 
 
 ---
-old examples (but works id add `target`)
+old examples (but works if add `target`)
 
 ```ruby
 require 'other/iamfile'
