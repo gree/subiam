@@ -4,20 +4,15 @@ Subiam is a tool to manage IAM.
 
 It defines the state of IAM using DSL, and updates IAM according to DSL.
 
+It's forked from Miam. Miam is designed to manage all IAM entities in the AWS account. Subiam is not so. Subiam is designed to manage sub part of IAM entities in the AWS account. For example around MySQL instances / around web servers / around lambda funtions / around monitoring systems.
+
 **Notice**
 
-* `>= 0.2.0`
-  * Use [get_account_authorization_details](http://docs.aws.amazon.com/sdkforruby/api/Aws/IAM/Client.html#get_account_authorization_details-instance_method).
-* `>= 0.2.1`
-  * Support Managed Policy attach/detach
-  * Support JSON format
-* `>= 0.2.2`
-  * Improve update (show diff)
-  * Support Template
-  * Add `--ignore-login-profile` option
-  * Sort policy array
-* `>= 0.2.3`
-  * Support Custom Managed Policy
+* `>= 1.0.0`
+  * Forked from miam
+  * Requried to specify `target` in DSL or json
+  * `instance_policy` also follow target (bug fix)
+  * don't delete top level entity (user, group, role, instance_policy) by default. Use the `--enable-delete` option.
 
 ## Installation
 
@@ -41,10 +36,9 @@ Or install it yourself as:
 export AWS_ACCESS_KEY_ID='...'
 export AWS_SECRET_ACCESS_KEY='...'
 export AWS_REGION='us-east-1'
-subiam -e -o IAMfile  # export IAM
-vi IAMfile
-subiam -a --dry-run
-subiam -a             # apply `IAMfile`
+vi subiam-xxx.rb
+subiam -a --dry-run subiam-xxx.rb
+subiam -a subiam-xxx.rb
 ```
 
 ## Help
@@ -66,19 +60,94 @@ Usage: subiam [options]
         --split-more
         --format=FORMAT
         --export-concurrency N
-        --target REGEXP
         --ignore-login-profile
         --no-color
         --no-progress
         --debug
+        --enable-delete
 ```
 
 ## IAMfile example
+subiam_mytool.rb
+
+```ruby
+require 'subiam_ec2_assume_role_attrs.rb'
+
+target /^mytool/ # required!!!
+
+role 'mytool', path: '/' do
+  context.version = '2012-10-17'
+
+  include_template 'ec2-assume-role-attrs'
+
+  instance_profiles(
+    'mytool'
+  )
+
+  policy 'mytool-role-policy' do
+    {
+      "Version" => context.version,
+      "Statement" => [
+        {
+          "Effect" => "Allow",
+          "Action" => [
+            "ec2:DescribeInstances",
+            "ec2:DescribeVpcs"
+          ],
+          "Resource" => [
+            "*"
+          ]
+        },
+        {
+          "Effect" => "Allow",
+          "Action" => [
+            "route53:Get*",
+            "route53:List*",
+            "route53:ChangeResourceRecordSets*"
+          ],
+          "Resource" => [
+            "*"
+          ]
+        },
+      ],
+    }
+  end
+end
+
+instance_profile 'mytool', path: '/'
+
+```
+
+subiam_ec2_assume_role_attrs.rb
+
+```ruby
+template "ec2-assume-role-attrs" do
+  assume_role_policy_document do
+    {
+      "Version" => context.version,
+      "Statement" => [
+        {
+          "Sid" => "",
+          "Effect" => "Allow",
+          "Principal" => {"Service" => "ec2.amazonaws.com"},
+          "Action" => "sts:AssumeRole",
+        },
+      ],
+    }
+  end
+end
+```
+
+
+---
+old examples (but works id add `target`)
 
 ```ruby
 require 'other/iamfile'
 
-user "bob", :path => "/developer/" do
+target /^monitoring-/
+
+user "monitoring-bob", :path => "/monitoring-user/" do
   login_profile :password_reset_required=>true
 
   groups(
