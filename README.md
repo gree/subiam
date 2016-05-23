@@ -4,7 +4,7 @@ Subiam is a tool to manage IAM.
 
 It defines the state of IAM using DSL, and updates IAM according to DSL.
 
-It's forked from Miam. Miam is designed to manage all IAM entities in the AWS account. Subiam is not so. Subiam is designed to manage sub part of IAM entities in the AWS account. For example around MySQL instances / around web servers / around lambda funtions / around monitoring systems.
+It's forked from Miam. Miam is designed to manage all IAM entities in the AWS account. Subiam is not so. Subiam is designed to manage sub part of IAM entities in the AWS account. For example around MySQL instances / around web servers / around lambda functions / around monitoring systems.
 
 **Notice**
 * `>= 1.1.0`
@@ -13,7 +13,7 @@ It's forked from Miam. Miam is designed to manage all IAM entities in the AWS ac
 
 * `>= 1.0.0`
   * Forked from miam
-  * Requried to specify `target` in DSL or json
+  * Required to specify `target` in DSL or json
   * `instance_profile` also follow target (bug fix)
   * don't delete top level entity (user, group, role, instance_profile) by default. Use the `--enable-delete` option.
 
