@@ -29,7 +29,7 @@ class Subiam::DSL::Context
 
   private
 
-  def require(file)
+  def import(file)
     iamfile = (file =~ %r|\A/|) ? file : File.expand_path(File.join(File.dirname(@path), file))
 
     if File.exist?(iamfile)
@@ -37,7 +37,7 @@ class Subiam::DSL::Context
     elsif File.exist?(iamfile + '.rb')
       instance_eval(File.read(iamfile + '.rb'), iamfile + '.rb')
     else
-      Kernel.require(file)
+      raise("File: #{iamfile} or #{iamfile + '.rb'} not found.")
     end
   end
 
