@@ -14,8 +14,8 @@ It's forked from Miam. Miam is designed to manage all IAM entities in the AWS ac
 * `>= 1.0.0`
   * Forked from miam
   * Requried to specify `target` in DSL or json
-  * `instance_policy` also follow target (bug fix)
-  * don't delete top level entity (user, group, role, instance_policy) by default. Use the `--enable-delete` option.
+  * `instance_profile` also follow target (bug fix)
+  * don't delete top level entity (user, group, role, instance_profile) by default. Use the `--enable-delete` option.
 
 ## Installation
 
