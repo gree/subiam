@@ -89,26 +89,26 @@ role 'mytool', path: '/' do
 
   policy 'mytool-role-policy' do
     {
-      "Version" => context.version,
-      "Statement" => [
+      Version: context.version,
+      Statement: [
         {
-          "Effect" => "Allow",
-          "Action" => [
+          Effect: "Allow",
+          Action: [
             "ec2:DescribeInstances",
             "ec2:DescribeVpcs"
           ],
-          "Resource" => [
+          Resource: [
             "*"
           ]
         },
         {
-          "Effect" => "Allow",
-          "Action" => [
+          Effect: "Allow",
+          Action: [
             "route53:Get*",
             "route53:List*",
             "route53:ChangeResourceRecordSets*"
           ],
-          "Resource" => [
+          Resource: [
             "*"
           ]
         },
@@ -127,13 +127,13 @@ subiam_ec2_assume_role_attrs.rb
 template "ec2-assume-role-attrs" do
   assume_role_policy_document do
     {
-      "Version" => context.version,
-      "Statement" => [
+      Version: context.version,
+      Statement: [
         {
-          "Sid" => "",
-          "Effect" => "Allow",
-          "Principal" => {"Service" => "ec2.amazonaws.com"},
-          "Action" => "sts:AssumeRole",
+          Sid: "",
+          Effect: "Allow",
+          Principal: {Service: "ec2.amazonaws.com"},
+          Action: "sts:AssumeRole",
         },
       ],
     }
