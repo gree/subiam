@@ -18,6 +18,6 @@ class Subiam::DSL::Context::ManagedPolicy
       raise "ManagedPolicy `#{@policy_name}`: wrong argument type #{document.class} (expected Hash)"
     end
 
-    document
+    document.keys_to_s_recursive
   end
 end

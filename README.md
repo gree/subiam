@@ -7,6 +7,9 @@ It defines the state of IAM using DSL, and updates IAM according to DSL.
 It's forked from Miam. Miam is designed to manage all IAM entities in the AWS account. Subiam is not so. Subiam is designed to manage sub part of IAM entities in the AWS account. For example around MySQL instances / around web servers / around lambda funtions / around monitoring systems.
 
 **Notice**
+* `>= 1.1.0`
+  * Rename `require` DSL command to `import` to avoid override Kernel#require
+  * Allow Symbols alternative to Strings at Hash keys. It's a bit easy to write!
 
 * `>= 1.0.0`
   * Forked from miam
@@ -71,7 +74,7 @@ Usage: subiam [options]
 subiam_mytool.rb
 
 ```ruby
-require 'subiam_ec2_assume_role_attrs.rb'
+import 'subiam_ec2_assume_role_attrs.rb'
 
 target /^mytool/ # required!!!
 
@@ -143,7 +146,7 @@ end
 old examples (but works if add `target`)
 
 ```ruby
-require 'other/iamfile'
+import 'other/iamfile'
 
 target /^monitoring-/
 
@@ -234,7 +237,7 @@ instance_profile "S3", :path => "/"
 ## Rename
 
 ```ruby
-require 'other/iamfile'
+import 'other/iamfile'
 
 user "bob2", :path => "/developer/", :renamed_from => "bob" do
   # ...

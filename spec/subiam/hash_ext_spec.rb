@@ -37,3 +37,25 @@ describe 'Hash#sort_array!' do
 
   it { is_expected.to eq expected_hash }
 end
+
+describe 'Hash#keys_to_s_recursive' do
+  let(:hash) do
+    {S3:
+         {Statement:
+              [{Action: ["s3:Put*", "s3:List*", "s3:Get*"],
+                Effect: "Allow",
+                Resource: "*"}]}}
+  end
+
+  let(:expected_hash) do
+    {"S3" =>
+         {"Statement" =>
+              [{"Action" => ["s3:Put*", "s3:List*", "s3:Get*"],
+                "Effect" => "Allow",
+                "Resource" => "*"}]}}
+  end
+
+  subject { hash.keys_to_s_recursive }
+
+  it { is_expected.to eq expected_hash }
+end

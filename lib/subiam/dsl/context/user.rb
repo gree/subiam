@@ -33,7 +33,7 @@ class Subiam::DSL::Context::User
       raise "User `#{@user_name}` > Policy `#{name}`: wrong argument type #{policy_document.class} (expected Hash)"
     end
 
-    @result[:policies][name] = policy_document
+    @result[:policies][name] = policy_document.keys_to_s_recursive
   end
 
   def attached_managed_policies(*policies)

@@ -78,6 +78,12 @@ def apply(cli = client)
   end
 end
 
+def parse(cli = client)
+  tempfile(yield) do |f|
+    cli.__send__(:load_file, f.path)
+  end
+end
+
 def export(options = {})
   options = {no_progress: true}.merge(options)
   cli = options.delete(:client) || Aws::IAM::Client.new

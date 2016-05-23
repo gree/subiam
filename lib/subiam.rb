@@ -15,8 +15,9 @@ require 'diffy'
 require 'hashie'
 
 module Subiam ; end
-require 'subiam/ext/string_ext'
+require 'subiam/ext/array_ext'
 require 'subiam/ext/hash_ext'
+require 'subiam/ext/string_ext'
 require 'subiam/logger'
 require 'subiam/template_helper'
 require 'subiam/client'

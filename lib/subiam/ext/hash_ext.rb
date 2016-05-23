@@ -8,6 +8,18 @@ class Hash
     self
   end
 
+  def keys_to_s_recursive
+    new_one = {}
+    self.each do |key, elem|
+      if elem.respond_to? :keys_to_s_recursive
+        new_one[key.to_s] = elem.keys_to_s_recursive
+        next
+      end
+      new_one[key.to_s] = elem
+    end
+    new_one
+  end
+
   private
 
   def sort_array0(value)

@@ -33,7 +33,7 @@ class Subiam::DSL::Context::Role
       raise "Role `#{@role_name}` > AssumeRolePolicyDocument: wrong argument type #{policy_document.class} (expected Hash)"
     end
 
-    @result[:assume_role_policy_document] = assume_role_policy_document
+    @result[:assume_role_policy_document] = assume_role_policy_document.keys_to_s_recursive
   end
 
   def policy(name)
@@ -49,7 +49,7 @@ class Subiam::DSL::Context::Role
       raise "Role `#{@role_name}` > Policy `#{name}`: wrong argument type #{policy_document.class} (expected Hash)"
     end
 
-    @result[:policies][name] = policy_document
+    @result[:policies][name] = policy_document.keys_to_s_recursive
   end
 
   def attached_managed_policies(*policies)
