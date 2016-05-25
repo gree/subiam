@@ -7,6 +7,9 @@ It defines the state of IAM using DSL, and updates IAM according to DSL.
 It's forked from Miam. Miam is designed to manage all IAM entities in the AWS account. Subiam is not so. Subiam is designed to manage sub part of IAM entities in the AWS account. For example around MySQL instances / around web servers / around lambda functions / around monitoring systems.
 
 **Notice**
+* `>= 1.2.0`
+  * Add helper methods: `arn_policy_by_aws`, `arn_policy_by_current_account`
+
 * `>= 1.1.0`
   * Rename `require` DSL command to `import` to avoid override Kernel#require
   * Allow Symbols alternative to Strings at Hash keys. It's a bit easy to write!
@@ -70,7 +73,7 @@ Usage: subiam [options]
         --enable-delete
 ```
 
-## IAMfile example
+## IAM definition files example
 subiam_mytool.rb
 
 ```ruby
@@ -138,6 +141,23 @@ template "ec2-assume-role-attrs" do
       ],
     }
   end
+end
+```
+
+
+## Use management policy
+
+```ruby
+user "foo", path: '/' do
+  attached_managed_policies(
+    'arn:aws:iam::0123456789:policy/MyPolicy',
+
+    arn_policy_by_current_account("MyPolicy2"),
+    # == "arn:aws:iam::0123456789:policy/MyPolicy2'
+
+    arn_policy_by_aws("AdministratorAccess")
+    # == 'arn:aws:iam::aws:policy/AdministratorAccess'
+  )
 end
 ```
 

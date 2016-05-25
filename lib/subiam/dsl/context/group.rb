@@ -1,5 +1,6 @@
 class Subiam::DSL::Context::Group
   include Subiam::TemplateHelper
+  include Subiam::DSL::Helper::Arn
 
   def initialize(context, name, &block)
     @group_name = name

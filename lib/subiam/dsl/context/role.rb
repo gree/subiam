@@ -1,5 +1,6 @@
 class Subiam::DSL::Context::Role
   include Subiam::TemplateHelper
+  include Subiam::DSL::Helper::Arn
 
   def initialize(context, name, &block)
     @role_name = name

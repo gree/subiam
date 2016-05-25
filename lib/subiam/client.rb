@@ -3,7 +3,7 @@ class Subiam::Client
 
   def initialize(options = {})
     @options = {:format => :ruby}.merge(options)
-    aws_config = options.delete(:aws_config) || {}
+    aws_config = options[:aws_config] || {}
     @iam = Aws::IAM::Client.new(aws_config)
     @driver = Subiam::Driver.new(@iam, options)
     @password_manager = options[:password_manager] || Subiam::PasswordManager.new('-', options)
@@ -512,13 +512,13 @@ class Subiam::Client
     if file.kind_of?(String)
       open(file) do |f|
         exec_by_format(
-          :ruby => proc { Subiam::DSL.parse(f.read, file) },
+          :ruby => proc { Subiam::DSL.parse(f.read, file, @options) },
           :json => proc { load_json(f) }
         )
       end
     elsif file.respond_to?(:read)
       exec_by_format(
-        :ruby => proc { Subiam::DSL.parse(file.read, file.path) },
+        :ruby => proc { Subiam::DSL.parse(file.read, file.path, @options) },
         :json => proc { load_json(f) }
       )
     else
