@@ -140,7 +140,7 @@ describe 'style' do
     end
   end
 
-  context 'ARN helpers should convert policy names to arn' do
+  context 'ARN helpers' do
     let(:dsl) do
       <<-RUBY
         user "iam-test-bob", :path=>"/devloper/" do
@@ -175,7 +175,7 @@ describe 'style' do
       RUBY
     end
 
-    it "should coverted to String keys" do
+    it "should convert policy names to arn" do
       parsed = parse { dsl }
       expect(parsed[:users]["iam-test-bob"][:attached_managed_policies][0]).to eq "arn:aws:iam::aws:policy/AdministratorAccess"
       expect(parsed[:groups]["iam-test-Admin"][:attached_managed_policies][0]).to eq "arn:aws:iam::aws:policy/AdministratorAccess"
