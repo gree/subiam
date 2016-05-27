@@ -60,7 +60,7 @@ class Subiam::Client
     expected = load_file(file)
 
     unless expected[:target]
-      raise "Required setting on DSL `target` not found"
+      raise "Target not found."
     end
     @target = expected[:target]
 
