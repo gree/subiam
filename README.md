@@ -45,8 +45,8 @@ Or install it yourself as:
 export AWS_ACCESS_KEY_ID='...'
 export AWS_SECRET_ACCESS_KEY='...'
 vi subiam-xxx.rb
-subiam -a --dry-run subiam-xxx.rb
-subiam -a subiam-xxx.rb
+subiam -a --dry-run -f subiam-xxx.rb
+subiam -a -f subiam-xxx.rb
 ```
 
 ## Help
