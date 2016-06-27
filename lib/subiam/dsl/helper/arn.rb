@@ -16,7 +16,7 @@ module Subiam::DSL::Helper
       end
       aws_config = (@context.options && @context.options[:aws_config]) ? @context.options[:aws_config] : {}
       sts = Aws::STS::Client.new(aws_config)
-      @current_account = sts.get_caller_identity.user_id
+      @current_account = sts.get_caller_identity.account
     end
   end
 end
