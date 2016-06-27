@@ -10,7 +10,7 @@ Gem::Specification.new do |spec|
   spec.email         = ['yuya.yaguchi@gree.net']
   spec.summary       = %q{Subiam is a tool to manage IAM. Forked from Miam.}
   spec.description   = %q{Subiam is a tool to manage IAM. It defines the state of IAM using DSL, and updates IAM according to DSL. Forked from Miam.}
-  spec.homepage      = 'https://github.com/yayugu/subiam'
+  spec.homepage      = 'https://github.com/gree/subiam'
   spec.license       = 'MIT'
 
   spec.files         = `git ls-files -z`.split("\x0")
