@@ -4,8 +4,9 @@ class Subiam::Driver
   MAX_POLICY_SIZE = 2048
   MAX_POLICY_VERSIONS = 5
 
-  def initialize(iam, options = {})
+  def initialize(iam, sts, options = {})
     @iam = iam
+    @sts = sts
     @options = options
   end
 
@@ -457,7 +458,7 @@ class Subiam::Driver
 
   def account_id
     # https://docs.aws.amazon.com/general/latest/gr/aws-arns-and-namespaces.html
-    @account_id ||= @iam.get_user.user.arn.split(':').fetch(4)
+    @account_id ||= @sts.get_caller_identity.account
   end
 
   def policy_arn(policy_name)

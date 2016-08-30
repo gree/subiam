@@ -5,7 +5,8 @@ class Subiam::Client
     @options = {:format => :ruby}.merge(options)
     aws_config = options[:aws_config] || {}
     @iam = Aws::IAM::Client.new(aws_config)
-    @driver = Subiam::Driver.new(@iam, options)
+    @sts = Aws::STS::Client.new(aws_config)
+    @driver = Subiam::Driver.new(@iam, @sts, options)
     @password_manager = options[:password_manager] || Subiam::PasswordManager.new('-', options)
     @target = nil
   end
